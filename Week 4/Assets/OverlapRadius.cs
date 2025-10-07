@@ -2,13 +2,26 @@ using UnityEngine;
 
 public class OverlapRadius : MonoBehaviour
 {
-    float radius = 12;
-    void ExplosionDamage(Vector3 center)
+   float radius = 4; //radius of the collider
+    float interval = 0f;
+
+    private void Update() {
+        interval += Time.deltaTime;
+        if (interval >= 2f )
+        {
+            RadObject(transform.position, radius);
+            interval = 0f;
+        }
+    }
+    void RadObject(Vector3 center, float radius)
     {
         Collider[] hitColliders = Physics.OverlapSphere(center, radius);
         foreach (var hitCollider in hitColliders)
         {
-            hitCollider.SendMessage("AddDamage");
+            if (hitCollider.CompareTag("object"))
+            {
+                Debug.Log(hitCollider.gameObject.name);
+            }
         }
     }
     void OnDrawGizmos()
