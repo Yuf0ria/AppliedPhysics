@@ -13,7 +13,8 @@ public class RaycastScript : MonoBehaviour
     //Text
     public TMP_Text TotalDistance;
     //Camera Rotate
-    public float rotateSpeed = 10f;
+    public float rotateSpeed = 5f;
+    private Quaternion targetRotation;
     private float zoom;
     private float zoomMultiplier = 4f;
     private float minZoom = 2f;
@@ -24,23 +25,28 @@ public class RaycastScript : MonoBehaviour
     void Start()
     {
         //gameObject disabled
-        Left.SetActive(false);
         Distance.SetActive(false);
 
         //camera get
         zoom = cam.orthographicSize;
+
+        //rotation initialization
+        targetRotation = transform.rotation;
     }
     void Update()
     {
         //Keyinput A & D, Gameobject rotates in Y-Axis
         if (Input.GetKeyDown(KeyCode.A))
         {
-            transform.Rotate(Vector3.up * rotateSpeed);
+            targetRotation = Quaternion.Euler(0, -90, 0);
+            
         }
-        if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D))
         {
-            transform.Rotate(Vector3.down * rotateSpeed);
+            targetRotation = Quaternion.Euler(0, 90, 0);
         }
+        
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
         //Inputs =  Done
 
         //Interact 
@@ -55,7 +61,7 @@ public class RaycastScript : MonoBehaviour
         {
             //Ui enable, left click
             Interact();
-            Left.SetActive(true);
+            Distance.SetActive(true);
         }
 
     }
