@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class RaycastScript : MonoBehaviour
 {
+    //serializefields
     [SerializeField] float distances;
     [SerializeField] LayerMask layerMask;
     [SerializeField] private Camera cam;
@@ -14,25 +15,25 @@ public class RaycastScript : MonoBehaviour
     public TMP_Text TotalDistance;
     //Camera Rotate
     public float speed = 5f;
-    private float zoom;
-    private float zoomMultiplier = 4f;
-    private float minZoom = 2f;
-    private float maxZoom = 8f;
-    private float velocity = 0f;
-    private float smoothTime = 0.25f;
+    private float zoom,
+                 zoomMultiplier = 4f,
+                 minZoom = 2f,
+                 maxZoom = 8f,
+                 velocity = 0f,
+                 smoothTime = 0.25f;
+
     //set rotation raycast to camera
 
     void Start()
     {
-        //gameObject disabled
+        //gameObject disabled, contains uninitialized text
         Distance.SetActive(false);
 
-        //camera get
+        //using orthographic mode in camera
         zoom = cam.orthographicSize;
     }
     void Update()
     {
-        //Keyinput A & D, Gameobject rotates in Y-Axis
         if (Input.GetKeyDown(KeyCode.A))
         {
             transform.position = new Vector3(transform.position.x - speed, transform.position.y, transform.position.z);
@@ -50,7 +51,6 @@ public class RaycastScript : MonoBehaviour
         cam.orthographicSize = Mathf.SmoothDamp(cam.orthographicSize, zoom, ref velocity, smoothTime);
         //Scrollwheel = Done!
 
-        //Interact UI Enable, lectclick
         if (Input.GetKey(KeyCode.Mouse0))
         {
             //Ui enable, left click
@@ -61,6 +61,7 @@ public class RaycastScript : MonoBehaviour
         {
             Distance.SetActive(false);
         }
+        //left mouse Done!
 
     }
 
@@ -74,9 +75,7 @@ public class RaycastScript : MonoBehaviour
         {
             Debug.Log($"Object name {hitInfo.transform.name}");
             Debug.DrawLine(ray.origin, hitInfo.point, Color.red); // Testing
-            //Get objects positions
-            // Vector2 Distance1 = new Vector2(Object.transform.position.x, Object.transform.position.y);
-            // Vector2 Distance2 = new Vector2(origin.transform.position.x, origin.transform.position.y);
+            //Get totaldistance using raycast
             var Distance = Vector3.Cross(ray.direction, hitInfo.point + ray.origin).magnitude;
             TotalDistance.text = "Distance: " + Distance.ToString();
             //TotalDistance Fixed
@@ -105,5 +104,4 @@ public class RaycastScript : MonoBehaviour
             }*/
 
     //Project Settings -> Physics -> Settings -> GameObject -> Disable Query Hit Triggers -> Remove QueryTriggerInteraction.Ignore
-    //keycode E for interacting, another script to test
 }
