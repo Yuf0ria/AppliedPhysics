@@ -9,12 +9,11 @@ public class RaycastScript : MonoBehaviour
     [SerializeField] Color color;
 
     //Gameobjects
-    public GameObject Distance, Left, Zoom;
+    public GameObject Distance, Left, Zoom, Object, origin;
     //Text
     public TMP_Text TotalDistance;
     //Camera Rotate
-    public float rotateSpeed = 5f;
-    private Quaternion targetRotation;
+    public float speed = 5f;
     private float zoom;
     private float zoomMultiplier = 4f;
     private float minZoom = 2f;
@@ -30,28 +29,18 @@ public class RaycastScript : MonoBehaviour
 
         //camera get
         zoom = cam.orthographicSize;
-
-        //rotation initialization
-        targetRotation = transform.rotation;
     }
     void Update()
     {
         //Keyinput A & D, Gameobject rotates in Y-Axis
         if (Input.GetKeyDown(KeyCode.A))
         {
-            targetRotation = Quaternion.Euler(0, -90, 0);
-            
+            transform.position = new Vector3(transform.position.x - speed, transform.position.y, transform.position.z);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            targetRotation = Quaternion.Euler(0, 90, 0);
+            transform.position = new Vector3(transform.position.x + speed, transform.position.y, transform.position.z);
         }
-        else
-        {
-            //targetRotation = Quaternion.Euler(0, 0, 0);
-        }
-        
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotateSpeed);
         //Inputs =  Done
 
         //Interact 
@@ -68,6 +57,10 @@ public class RaycastScript : MonoBehaviour
             Interact();
             Distance.SetActive(true);
         }
+        else
+        {
+            Distance.SetActive(false);
+        }
 
     }
 
@@ -77,13 +70,22 @@ public class RaycastScript : MonoBehaviour
         RaycastHit hitInfo;
 
         //Appear at scope
-        if (Physics.Raycast(ray, out hitInfo, distances, layerMask, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out hitInfo, distances, layerMask))
         {
             Debug.Log($"Object name {hitInfo.transform.name}");
             Debug.DrawLine(ray.origin, hitInfo.point, Color.red); // Testing
-            TotalDistance.text = "Total Distance: " + hitInfo.transform.name;
+            Vector2 Distance1 = new Vector2(Object.transform.position.x,Object.transform.position.y);
+            Vector2 Distance2 = new Vector2(origin.transform.position.x, origin.transform.position.y);
+            var Distance = (Distance1, Distance2);
+            TotalDistance.text = "Distance: " + Distance.ToString();
+            
+        }
+        else
+        {
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction * distances, Color.blue);
         }
     }
+    
 
     //Initial lesson summary by sir maynard
     //call physics, physics2D for 2D
