@@ -21,6 +21,7 @@ public class RaycastScript : MonoBehaviour
     private float maxZoom = 8f;
     private float velocity = 0f;
     private float smoothTime = 0.25f;
+    //set rotation raycast to camera
 
     void Start()
     {
