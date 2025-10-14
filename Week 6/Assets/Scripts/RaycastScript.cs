@@ -9,7 +9,7 @@ public class RaycastScript : MonoBehaviour
     [SerializeField] Color color;
 
     //Gameobjects
-    public GameObject Distance, Left, Zoom, Object, origin;
+    public GameObject Distance, Left, Zoom;
     //Text
     public TMP_Text TotalDistance;
     //Camera Rotate
@@ -74,15 +74,17 @@ public class RaycastScript : MonoBehaviour
         {
             Debug.Log($"Object name {hitInfo.transform.name}");
             Debug.DrawLine(ray.origin, hitInfo.point, Color.red); // Testing
-            Vector2 Distance1 = new Vector2(Object.transform.position.x,Object.transform.position.y);
-            Vector2 Distance2 = new Vector2(origin.transform.position.x, origin.transform.position.y);
-            var Distance = (Distance1, Distance2);
+            //Get objects positions
+            // Vector2 Distance1 = new Vector2(Object.transform.position.x, Object.transform.position.y);
+            // Vector2 Distance2 = new Vector2(origin.transform.position.x, origin.transform.position.y);
+            var Distance = Vector3.Cross(ray.direction, hitInfo.point + ray.origin).magnitude;
             TotalDistance.text = "Distance: " + Distance.ToString();
-            
+            //TotalDistance Fixed
         }
         else
         {
             Debug.DrawLine(ray.origin, ray.origin + ray.direction * distances, Color.blue);
+            TotalDistance.text = "Not Yellow";
         }
     }
     
